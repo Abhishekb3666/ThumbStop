@@ -18,7 +18,18 @@ from .personas import load as load_pack
 KIND_TAU = dict(reel=11, video=22, audio=26, carousel=16, image=5, text=14)  # seconds of patience at avg
 BASE = dict(like=.14, comment=.011, share=.030, save=.042, visit=.05, link=.02)
 SCORE_W = dict(hold=.15, avg_watch=.15, completion=.15, share=.20, save=.15, like=.07, comment=.06, follow=.07)
-NEUTRAL = dict(hook=.5, clarity=.7, value=.3, emotion=.3, cta=0., question=0., curiosity=.2, visual=.5, link=0.)
+IDEAL_SECONDS = dict(reel=(7, 35), video=(20, 90), audio=(20, 120), image=(4, 10), text=(6, 38))
+NEUTRAL = dict(hook=.5, clarity=.7, value=.3, emotion=.3, cta=0., question=0., curiosity=.2, visual=.5, link=0.,
+               save_cta=0., share_cta=0., follow_cta=0.)
+
+
+def baseline_segments(c):
+    """Timeline of the neutral comparison post: your own length, clamped into the ideal band for the kind.
+    So posts inside the band are judged on execution alone, and posts outside it pay for being too long/short."""
+    if c.kind == "carousel":
+        return [3.5] * min(10, max(5, len(c.segments)))
+    lo, hi = IDEAL_SECONDS[c.kind]
+    return [min(hi, max(lo, c.duration))]
 
 
 @dataclass
@@ -118,7 +129,8 @@ def _decide(agent, i, seed, kind, platform, f, topics, segs):
     q = .30 * f["hook"] + .25 * f["clarity"] + .15 * f["emotion"] + .15 * f["visual"] + .15 * f["value"]
     relmod = .4 + .8 * rel
     d = dict(like=q, comment=.4 * f["cta"] + .3 * f["question"] + .3 * f["emotion"],
-             share=.4 * f["emotion"] + .3 * rel + .3 * f["value"], save=.6 * f["value"] + .2 * f["clarity"] + .2 * rel,
+             share=.4 * f["emotion"] + .3 * rel + .3 * f["value"] + .3 * f["share_cta"],
+             save=.6 * f["value"] + .2 * f["clarity"] + .2 * rel + .3 * f["save_cta"],
              visit=.5 * rel + .5 * f["hook"])
     mult = dict(like=u["like"] * a["like"], comment=u["comment"] * a["comment"], share=u["share_"] * a["share"],
                 save=u["save"] * a["save"], visit=1.0)
@@ -127,7 +139,7 @@ def _decide(agent, i, seed, kind, platform, f, topics, segs):
     if f["link"]:
         r["link"] = rng.random() < min(.5, BASE["link"] * (.4 + 1.2 * rel) * e)
     if r["visit"] and not agent.follower:
-        r["follow"] = rng.random() < min(.9, .14 * u["follow"] * a["follow"] * (.5 + q))
+        r["follow"] = rng.random() < min(.9, .14 * u["follow"] * a["follow"] * (.5 + q) * (1 + .5 * f["follow_cta"]))
     if r["completed"] and dur <= 45 and kind in ("reel", "video", "audio"):
         r["replay"] = rng.random() < min(.5, .25 * f["emotion"] + .2 * rel)
     if watched / dur < .35 and rel < .3:
@@ -239,12 +251,17 @@ def run(c, platform="instagram", n=1000, followers=0.25, seed=7, niche="general"
     """Simulate `n` users seeing content `c`. Deterministic for a given seed."""
     if platform not in PLATFORMS:
         raise ValueError(f"unknown platform '{platform}'. Use one of: {', '.join(PLATFORMS)}")
+    if not 50 <= n <= 200000:
+        raise ValueError("audience size must be between 50 and 200000 simulated users")
+    if not 0 <= followers <= 1:
+        raise ValueError("followers must be between 0 and 1")
     extra = load_pack(niche)[1]
     f = C.features(c, extra)
     pop = population(n, platform, c.topics, followers, seed)
     rows = [_decide(a, i, seed, c.kind, platform, f, c.topics, c.segments) for i, a in enumerate(pop)]
     nf = {**NEUTRAL, "hook": .5, "visual": c.visual}
-    base_rows = [_decide(a, i, seed, c.kind, platform, nf, c.topics, c.segments) for i, a in enumerate(pop)]
+    base_segs = baseline_segments(c)
+    base_rows = [_decide(a, i, seed, c.kind, platform, nf, c.topics, base_segs) for i, a in enumerate(pop)]
     m, base = _agg(rows), _agg(base_rows)
     se = lambda p: round(1.96 * math.sqrt(max(p * (1 - p), 0) / n), 4)
     ci = {k: se(v) for k, v in m.items() if k.endswith("_rate") or k == "avg_watch_pct"}

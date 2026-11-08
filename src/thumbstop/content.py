@@ -103,19 +103,27 @@ def load(src, kind=None, caption="", topics=(), niche="general"):
     topics = [t.strip() for t in (topics.split(",") if isinstance(topics, str) else topics) if t.strip()]
     if src == "-":
         import sys
-        return from_text(kind or "text", sys.stdin.read(), caption, topics=topics, niche=niche)
+        return _need(from_text(kind or "text", sys.stdin.read(), caption, topics=topics, niche=niche), src)
     p = Path(src)
+    if not p.exists():
+        raise FileNotFoundError(f"no such file or folder: {src}")
     if p.is_dir():
         return _from_dir(p, kind, caption, topics, niche)
     ext = p.suffix.lower()
     if ext == ".json":
-        return _from_spec(json.loads(p.read_text(encoding="utf-8")), kind, caption, topics, niche)
+        return _need(_from_spec(json.loads(p.read_text(encoding="utf-8")), kind, caption, topics, niche), src)
     if ext in VIDEO_EXT or ext in AUDIO_EXT:
         k = kind or ("audio" if ext in AUDIO_EXT else "reel")
         return from_facts(k, video.transcribe(str(p)), topics, niche, caption)
     if ext in IMAGE_EXT:
         return _from_images([p], "image" if not kind else kind, caption, topics, niche)
-    return from_text(kind or "text", p.read_text(encoding="utf-8"), caption, topics=topics, niche=niche)
+    return _need(from_text(kind or "text", p.read_text(encoding="utf-8"), caption, topics=topics, niche=niche), src)
+
+
+def _need(c, src):
+    if not c.text.strip():
+        raise ValueError(f"{src}: nothing to analyze (the post text is empty)")
+    return c
 
 
 def _from_spec(spec, kind, caption, topics, niche):
@@ -214,6 +222,10 @@ def features(c, extra_curiosity=()):
     cta = float(any(k in low for k in CTA))
     question = float("?" in c.text)
     curiosity = 1.0 if any(w in c.hook.lower() for w in H.CURIOSITY) else 0.2
+    save_cta = float(any(k in low for k in ("save this", "save it", "save for later", "bookmark")))
+    share_cta = float(any(k in low for k in ("send this", "share this", "tag a", "send it to", "share with", "send to")))
+    follow_cta = float("follow" in low)
     return dict(hook=hook, clarity=clarity, value=value, emotion=emotion, cta=cta, question=question,
+                save_cta=save_cta, share_cta=share_cta, follow_cta=follow_cta,
                 curiosity=curiosity, visual=c.visual, link=float(any(k in low for k in LINK_CTA)),
                 hook_issues=hook_issues)

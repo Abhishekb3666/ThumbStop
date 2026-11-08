@@ -40,6 +40,13 @@ def print_crowd(r, alts=()):
 
 
 def main(argv=None):
+    try:
+        _main(argv)
+    except (FileNotFoundError, ValueError, KeyError) as e:  # user mistakes: one clean line, not a traceback
+        sys.exit(f"thumbstop: error: {e.args[0] if isinstance(e, KeyError) else e}")
+
+
+def _main(argv=None):
     ap = argparse.ArgumentParser(prog="thumbstop")
     sub = ap.add_subparsers(dest="cmd", required=True)
     a = sub.add_parser("analyze", help="score a script/caption and suggest better hooks")
@@ -50,7 +57,7 @@ def main(argv=None):
     a.add_argument("--save", metavar="NAME", help="remember this prediction for calibration")
     r = sub.add_parser("result", help="record real metrics: result NAME reach=1200 likes=80 ...")
     r.add_argument("name")
-    r.add_argument("metrics", nargs="+")
+    r.add_argument("metrics", nargs="*")
     r.add_argument("--media-id", help="Instagram media id; fetch metrics automatically")
     sub.add_parser("calibrate", help="fit score weights from recorded real results")
     c = sub.add_parser("crowd", help="simulate a whole crowd (ages, user types, interests) on any post format")
@@ -135,7 +142,11 @@ def main(argv=None):
             calibrate.record(args.save, r)
         alts = []
         if args.hooks:
-            alts = crowd.rank_hooks(content, llm.hooks(content.text, args.niche, content.kind), **kw)
+            ideas = llm.hooks(content.text, args.niche, content.kind) if llm.available() else []
+            if ideas:
+                alts = crowd.rank_hooks(content, ideas, **kw)
+            else:
+                print("note: --hooks needs `pip install thumbstop[llm]` and ANTHROPIC_API_KEY (or the call failed)", file=sys.stderr)
         if args.json:
             print(json.dumps({**r.__dict__, "hook_ranking": alts}, indent=2))
         else:

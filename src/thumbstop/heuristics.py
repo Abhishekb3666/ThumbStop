@@ -6,6 +6,7 @@ GREETINGS = ("hey guys", "hi guys", "hi everyone", "hey everyone", "welcome back
              "hello everyone", "so today", "in this video", "today i", "today we")
 CURIOSITY = ("secret", "mistake", "nobody", "never", "stop", "wrong", "truth", "why",
              "how", "without", "before you", "worst", "best", "only", "hack", "myth")
+NUMBER_WORDS = r"\b(one|two|three|four|five|six|seven|eight|nine|ten|dozen|hundred|thousand|million)\b"
 CTA = ("follow", "comment", "share", "save", "send this", "link in bio", "subscribe")
 
 
@@ -27,7 +28,7 @@ def hook_score(hook: str, extra=()):
         s -= 10; issues.append(f"Hook is {n} words; aim for 12 or fewer (about 3 seconds).")
     elif n <= 9:
         s += 8
-    if re.search(r"\d", hook):
+    if re.search(r"\d", hook) or re.search(NUMBER_WORDS, h):
         s += 12
     else:
         issues.append("No number or concrete result in the hook - specifics stop the scroll.")

@@ -70,8 +70,7 @@ def main(argv=None):
         w, info = calibrate.fit()
         print(json.dumps({"weights": w, **info}, indent=2))
     elif args.cmd == "packs":
-        print("
-".join(personas.available()))
+        print("\n".join(personas.available()))
         print("add your own:", calibrate.home() / "packs" / "<niche>.json")
     elif args.cmd == "plan":
         for s in planner.plan(args.niche, args.days, args.per_day):

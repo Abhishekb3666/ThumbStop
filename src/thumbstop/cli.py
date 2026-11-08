@@ -2,8 +2,41 @@ import argparse
 import json
 import sys
 
-from . import calibrate, instagram, personas, planner, trends, video
+from . import calibrate, content as C, crowd, instagram, llm, personas, planner, trends, video
 from .simulate import simulate
+
+
+def print_crowd(r, alts=()):
+    m, ci = r.metrics, r.ci
+    p = lambda k: f"{m[k]:.1%}" + (f" +/-{ci[k]:.1%}" if k in ci else "")
+    print(f"CROWD SCORE: {r.score}/100 ({r.tier})   {r.kind} on {r.platform}, {r.n} simulated users, "
+          f"{r.followers:.0%} followers, ~{r.duration}s")
+    print(f"topics: {', '.join(r.topics) or 'none detected'}   (50 = a neutral average post, 100 = double on every metric)\n")
+    print(f"skip rate {p('skip_rate')}   3s hold {p('hold_rate')}   avg watched {p('avg_watch_pct')}   "
+          f"completion {p('completion_rate')}   replays {m['replay_rate']:.1%}")
+    print(f"likes {p('like_rate')}   comments {p('comment_rate')}   shares {p('share_rate')}   saves {p('save_rate')}")
+    print(f"profile visits {p('profile_visit_rate')}   follows {p('follow_rate')}   link clicks {m['link_click_rate']:.1%}   "
+          f"engagement {m['engagement_rate']:.1%}   not interested {m['not_interested_rate']:.1%}")
+    if r.slide_reach:
+        print("\nReach per slide: " + "  ".join(f"{s['slide']}:{s['pct']:.0%}" for s in r.slide_reach))
+    else:
+        print("\nRetention: " + "  ".join(f"{x['at']}:{x['pct']:.0%}" for x in r.retention))
+    for name, rows in r.segments.items():
+        if name == "interest":
+            continue
+        print(f"\nBy {name.replace('_', ' ')}:")
+        for label, v in rows.items():
+            print(f"  {label:<11} n={v['n']:<5} skip {v['skip_rate']:.0%}  watched {v['avg_watch_pct']:.0%}  "
+                  f"like {v['like_rate']:.1%}  share {v['share_rate']:.1%}  save {v['save_rate']:.1%}")
+    for title, items in (("Insights", r.insights), ("Hook issues", r.hook_issues), ("Warnings", r.warnings)):
+        if items:
+            print(f"\n{title}:")
+            for i in items:
+                print(f"  - {i}")
+    if alts:
+        print("\nHook ranking (same crowd, same draws):")
+        for a in alts:
+            print(f"  [{a['score']:>3}] skip {a['skip_rate']:.0%}  {'(current) ' if a['current'] else ''}{a['hook']}")
 
 
 def main(argv=None):
@@ -20,6 +53,19 @@ def main(argv=None):
     r.add_argument("metrics", nargs="+")
     r.add_argument("--media-id", help="Instagram media id; fetch metrics automatically")
     sub.add_parser("calibrate", help="fit score weights from recorded real results")
+    c = sub.add_parser("crowd", help="simulate a whole crowd (ages, user types, interests) on any post format")
+    c.add_argument("input", help="script/post .txt, .json spec, video/audio file, image, folder of slides, or - for stdin")
+    c.add_argument("--kind", help="reel, video, carousel, image, audio or text (inferred when omitted)")
+    c.add_argument("--platform", default="instagram", help="instagram, tiktok, youtube, linkedin, x")
+    c.add_argument("--niche", default="general")
+    c.add_argument("--topics", default="", help="comma-separated interests, e.g. fitness,health")
+    c.add_argument("--caption", default="")
+    c.add_argument("-n", "--audience", type=int, default=2000, help="simulated viewers")
+    c.add_argument("--followers", type=float, default=0.25, help="share of the crowd that already follows you")
+    c.add_argument("--seed", type=int, default=7)
+    c.add_argument("--hooks", action="store_true", help="LLM writes alternative hooks, the crowd re-scores each")
+    c.add_argument("--json", action="store_true")
+    c.add_argument("--save", metavar="NAME", help="remember this prediction for calibration")
     sub.add_parser("packs", help="list niche persona packs")
     t = sub.add_parser("trends", help="what is trending in your niche + hook ideas")
     t.add_argument("--niche", default="general")
@@ -81,6 +127,19 @@ def main(argv=None):
             print("No trends found.")
         for e in errs:
             print("warning:", e)
+    elif args.cmd == "crowd":
+        content = C.load(args.input, args.kind, args.caption, args.topics, args.niche)
+        kw = dict(platform=args.platform, n=args.audience, followers=args.followers, seed=args.seed, niche=args.niche)
+        r = crowd.run(content, **kw)
+        if args.save:
+            calibrate.record(args.save, r)
+        alts = []
+        if args.hooks:
+            alts = crowd.rank_hooks(content, llm.hooks(content.text, args.niche, content.kind), **kw)
+        if args.json:
+            print(json.dumps({**r.__dict__, "hook_ranking": alts}, indent=2))
+        else:
+            print_crowd(r, alts)
     elif args.cmd == "packs":
         print("\n".join(personas.available()))
         print("add your own:", calibrate.home() / "packs" / "<niche>.json")

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ThumbStop - will your hook land?</title>
+<meta name="description" content="Paste your Reel or Short script. A simulated audience scores it and tells you how to fix the hook.">
+<style>
+:root{--bg:#0e0f13;--card:#171921;--line:#272a36;--text:#eceef5;--mute:#8d93a7;--accent:#ff4d6d;--good:#3ddc97;--mid:#ffc857;--bad:#ff5d6c}
+@media (prefers-color-scheme:light){:root{--bg:#f6f6f9;--card:#fff;--line:#e3e4ec;--text:#16171d;--mute:#666b80}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:880px;margin:0 auto;padding:40px 16px 64px}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
+h1 span{color:var(--accent)}
+.sub{color:var(--mute);margin:0 0 28px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+textarea{width:100%;min-height:140px;resize:vertical;background:transparent;color:inherit;border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit}
+textarea:focus,input:focus{outline:2px solid var(--accent);outline-offset:1px}
+.row{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
+input{flex:1;min-width:160px;background:transparent;color:inherit;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit}
+button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:10px 22px;font:inherit;font-weight:600;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}
+.hint{color:var(--mute);font-size:14px;margin-top:8px}
+#out{margin-top:24px;display:none}
+.top{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.dial{--p:0;--c:var(--mid);width:140px;height:140px;border-radius:50%;display:grid;place-items:center;flex:none;
+  background:conic-gradient(var(--c) calc(var(--p)*1%),var(--line) 0)}
+.dial div{width:112px;height:112px;border-radius:50%;background:var(--card);display:grid;place-items:center;text-align:center}
+.dial b{font-size:38px;line-height:1}
+.dial small{display:block;color:var(--mute);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+.bars{flex:1;min-width:240px;display:grid;gap:10px}
+.bar label{display:flex;justify-content:space-between;font-size:14px;color:var(--mute)}
+.bar i{display:block;height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:4px}
+.bar i b{display:block;height:100%;background:var(--accent)}
+h2{font-size:16px;margin:24px 0 8px}
+ul{margin:0;padding-left:20px}li{margin:4px 0}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td,th{text-align:left;padding:6px 8px;border-top:1px solid var(--line)}th{color:var(--mute);font-weight:500;border:0}
+.err{color:var(--bad);margin-top:12px}
+footer{color:var(--mute);font-size:13px;margin-top:32px}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Will your hook <span>land</span>?</h1>
+  <p class="sub">Paste your Reel / Short / TikTok script. A simulated audience scrolls past it, or doesn't.</p>
+  <form class="card" id="f">
+    <textarea id="script" maxlength="4000" aria-label="Your script" placeholder="Stop wasting 3 hours a day on this gym mistake. Most people never fix it..."></textarea>
+    <div class="row">
+      <input id="niche" list="packs" value="general" aria-label="Niche" placeholder="Niche (fitness, finance, food, tech, ...)">
+      <datalist id="packs"><option>fitness<option>finance<option>food<option>tech</datalist>
+      <button id="go">Score it</button>
+    </div>
+    <div class="hint">Tip: the first line is treated as your hook. Quick offline estimate; accuracy improves as you calibrate with real results.</div>
+    <div class="err" id="err" role="alert"></div>
+  </form>
+
+  <section class="card" id="out" aria-live="polite">
+    <div class="top">
+      <div class="dial" id="dial"><div><span><b id="score">0</b><small id="tier"></small></span></div></div>
+      <div class="bars" id="bars"></div>
+    </div>
+    <h2>Fix these</h2><ul id="issues"></ul>
+    <div id="hooksWrap" hidden><h2>Try these hooks</h2><ul id="hooks"></ul></div>
+    <h2>Who stays, who swipes</h2>
+    <table><thead><tr><th>Viewer</th><th>Stops</th><th>Watches</th><th>Shares</th></tr></thead><tbody id="people"></tbody></table>
+  </section>
+  <footer>Open source (MIT) · <a href="https://github.com/Abhishekb3666/thumbstop">github.com/Abhishekb3666/thumbstop</a></footer>
+</main>
+<script>
+const $ = id => document.getElementById(id), pct = x => Math.round(x * 100) + "%";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+$("f").addEventListener("submit", async e => {
+  e.preventDefault(); $("err").textContent = ""; $("go").disabled = true; $("go").textContent = "Simulating...";
+  try {
+    const res = await fetch("/api/analyze", {method: "POST", headers: {"content-type": "application/json"},
+      body: JSON.stringify({script: $("script").value, niche: $("niche").value})});
+    const r = await res.json();
+    if (!res.ok) throw new Error(r.error || "Something went wrong.");
+    show(r);
+  } catch (x) { $("err").textContent = x.message; }
+  $("go").disabled = false; $("go").textContent = "Score it";
+});
+function show(r) {
+  $("out").style.display = "block";
+  $("score").textContent = r.score; $("tier").textContent = r.tier;
+  const d = $("dial"); d.style.setProperty("--p", r.score);
+  d.style.setProperty("--c", r.score >= 55 ? "var(--good)" : r.score >= 35 ? "var(--mid)" : "var(--bad)");
+  const bars = [["Hook strength", r.hook_score], ["Structure & pacing", r.structure_score],
+    ["Stop the scroll", r.stop_rate * 100], ["Watch-through", r.avg_watch * 100]];
+  $("bars").innerHTML = bars.map(([n, v]) => `<div class="bar"><label><span>${n}</span><span>${Math.round(v)}%</span></label><i><b style="width:${Math.min(100, v)}%"></b></i></div>`).join("");
+  $("issues").innerHTML = (r.issues.length ? r.issues : ["Nothing obvious - nice."]).map(i => `<li>${esc(i)}</li>`).join("");
+  $("hooksWrap").hidden = !r.hooks.length; $("hooks").innerHTML = r.hooks.map(h => `<li>${esc(h)}</li>`).join("");
+  $("people").innerHTML = Object.entries(r.breakdown).map(([n, v]) =>
+    `<tr><td>${esc(n)}</td><td>${pct(v.stop)}</td><td>${pct(v.watch)}</td><td>${pct(v.share)}</td></tr>`).join("");
+  $("out").scrollIntoView({behavior: "smooth", block: "nearest"});
+}
+</script>
+</body>
+</html>

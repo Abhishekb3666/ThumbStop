@@ -1,5 +1,5 @@
-from reachsim import simulate
-from reachsim.planner import plan
+from thumbstop import simulate
+from thumbstop.planner import plan
 
 GOOD = ("Stop wasting 3 hours a day on this gym mistake. Most people never fix it. "
         "Do 3 sets, rest 60 seconds, and track every rep. Follow for more.")
@@ -25,8 +25,8 @@ def test_plan_len():
 
 
 def test_calibration(tmp_path, monkeypatch):
-    from reachsim import calibrate
-    monkeypatch.setenv("REACHSIM_HOME", str(tmp_path))
+    from thumbstop import calibrate
+    monkeypatch.setenv("THUMBSTOP_HOME", str(tmp_path))
     scripts = [BAD, GOOD, "Stop. 3 mistakes you make daily? Follow.", "hi everyone so today", GOOD + " Save this.", BAD + " more"]
     for i, s in enumerate(scripts):
         r = simulate(s, "fitness", use_llm=False)
@@ -40,7 +40,7 @@ def test_calibration(tmp_path, monkeypatch):
 
 
 def test_video_facts():
-    from reachsim.video import Facts
+    from thumbstop.video import Facts
     good = Facts(20, [(0.1, 2.5, "Stop wasting 3 hours on this gym mistake."), (2.6, 12, "Do 3 sets and track every rep. Follow for more.")])
     slow = Facts(20, [(2.5, 4, "Stop wasting 3 hours on this gym mistake."), (7, 12, "Do 3 sets and track every rep. Follow for more.")])
     g, s = simulate("", "fitness", use_llm=False, facts=good), simulate("", "fitness", use_llm=False, facts=slow)

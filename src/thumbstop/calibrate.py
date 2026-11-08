@@ -1,4 +1,4 @@
-"""Phase 2: learn from real results. History lives in $REACHSIM_HOME (default ~/.reachsim).
+"""Phase 2: learn from real results. History lives in $THUMBSTOP_HOME (default ~/.thumbstop).
 Weights are set proportional to each signal's rank-correlation with real engagement."""
 import json
 import os
@@ -10,8 +10,11 @@ MIN_POSTS = 5  # below this, correlations are noise; keep defaults
 
 
 def home() -> Path:
-    p = Path(os.environ.get("REACHSIM_HOME", Path.home() / ".reachsim"))
-    p.mkdir(parents=True, exist_ok=True)
+    p = Path(os.environ.get("THUMBSTOP_HOME", Path.home() / ".thumbstop"))
+    try:
+        p.mkdir(parents=True, exist_ok=True)
+    except OSError:  # read-only filesystem (serverless): reads still work, writes will raise
+        pass
     return p
 
 

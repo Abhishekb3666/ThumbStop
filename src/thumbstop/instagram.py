@@ -35,5 +35,5 @@ def publish_reel(video_url: str, caption: str, confirm: bool = False):
 
 
 def insights(media_id: str):
-    """Real performance, to compare against reachsim's predicted score."""
+    """Real performance, to compare against thumbstop's predicted score."""
     return _call(f"{media_id}/insights", {"metric": "reach,likes,comments,shares,saved,plays"}, "GET")

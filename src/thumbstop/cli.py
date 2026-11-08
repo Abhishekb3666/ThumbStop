@@ -7,7 +7,7 @@ from .simulate import simulate
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(prog="reachsim")
+    ap = argparse.ArgumentParser(prog="thumbstop")
     sub = ap.add_subparsers(dest="cmd", required=True)
     a = sub.add_parser("analyze", help="score a script/caption and suggest better hooks")
     a.add_argument("file", help="script .txt, - for stdin, or a video/audio file")

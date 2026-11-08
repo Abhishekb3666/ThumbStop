@@ -24,6 +24,7 @@ class Report:
     hooks: list = field(default_factory=list)
     reactions: dict = field(default_factory=dict)
     mode: str = "heuristic"
+    breakdown: dict = field(default_factory=dict)  # persona -> {stop, watch, share}
 
     def signals(self):
         return signals(self.stop_rate, self.stop_rate * self.avg_watch, self.share_rate, self.follow_rate)
@@ -53,12 +54,14 @@ def simulate(script: str, niche: str = "general", use_llm=None, facts=None) -> R
             fixes = [f"(LLM unavailable, used heuristics: {e})"]
 
     stop = watch = share = follow = 0.0
+    bd = {}
     for p in people:
         r = rx.get(p.name, {})
         st = _c(r.get("stops_scrolling", (hs / 100) * p.hook_sens + (1 - p.hook_sens) * 0.5 * hs / 100))
         wt = _c(r.get("watch_fraction", (ss / 100) * (0.6 + 0.4 * p.patience)))
         sh = _c(r.get("shares", st * wt * p.share * 2))
         fo = _c(r.get("follows", st * wt * p.follow * 2))
+        bd[p.name] = {"stop": round(st, 2), "watch": round(wt, 2), "share": round(sh, 2), "weight": round(p.weight, 2)}
         stop += p.weight * st
         watch += p.weight * st * wt
         share += p.weight * sh
@@ -70,4 +73,4 @@ def simulate(script: str, niche: str = "general", use_llm=None, facts=None) -> R
     tier = "low" if score < 35 else "average" if score < 55 else "good" if score < 75 else "viral potential"
     return Report(score, tier, hs, ss, round(dur, 1), round(stop, 3), round(avg_watch, 3),
                   round(share, 3), round(follow, 3), hi + si + fixes, hooks,
-                  {k: v.get("reason", "") for k, v in rx.items()}, mode)
+                  {k: v.get("reason", "") for k, v in rx.items()}, mode, bd)

@@ -1,5 +1,5 @@
 [project]
-name = "reachsim"
+name = "thumbstop"
 version = "0.1.0"
 description = "Simulate how an audience reacts to your short-form video before you post it. Get a reach score, weak spots and better hooks."
 readme = "README.md"
@@ -13,14 +13,14 @@ video = ["faster-whisper>=1.0"]
 dev = ["pytest"]
 
 [project.scripts]
-reachsim = "reachsim.cli:main"
+thumbstop = "thumbstop.cli:main"
 
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.package-data]
-reachsim = ["packs/*.json"]
+thumbstop = ["packs/*.json"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

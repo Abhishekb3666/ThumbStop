@@ -1,4 +1,4 @@
-"""Video input. Transcription needs `pip install reachsim[video]` (faster-whisper decodes via PyAV,
+"""Video input. Transcription needs `pip install thumbstop[video]` (faster-whisper decodes via PyAV,
 so no system ffmpeg is required). Everything after transcribe() is pure logic and unit-tested."""
 from dataclasses import dataclass
 
@@ -15,7 +15,7 @@ def transcribe(path: str, model: str = "base") -> Facts:
     try:
         from faster_whisper import WhisperModel
     except ImportError:
-        raise SystemExit("Video input needs: pip install reachsim[video]")
+        raise SystemExit("Video input needs: pip install thumbstop[video]")
     segs, info = WhisperModel(model, compute_type="int8").transcribe(path)
     return Facts(info.duration, [(s.start, s.end, s.text.strip()) for s in segs])
 

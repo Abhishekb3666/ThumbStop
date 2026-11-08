@@ -1,9 +1,9 @@
 """Optional LLM layer: personas react like real viewers and we get rewritten hooks.
-Needs `pip install reachsim[llm]` and ANTHROPIC_API_KEY. Falls back to heuristics otherwise."""
+Needs `pip install thumbstop[llm]` and ANTHROPIC_API_KEY. Falls back to heuristics otherwise."""
 import json
 import os
 
-MODEL = os.environ.get("REACHSIM_MODEL", "claude-sonnet-5-5")
+MODEL = os.environ.get("THUMBSTOP_MODEL", "claude-sonnet-5-5")
 
 
 def available() -> bool:

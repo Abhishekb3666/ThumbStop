@@ -1,5 +1,5 @@
-"""Audience personas come from JSON packs: ~/.reachsim/packs/<niche>.json (yours) overrides
-the built-in src/reachsim/packs/<niche>.json; unknown niches use default.json.
+"""Audience personas come from JSON packs: ~/.thumbstop/packs/<niche>.json (yours) overrides
+the built-in src/thumbstop/packs/<niche>.json; unknown niches use default.json.
 hook_sens: how much the hook decides the swipe (0-1). patience: pacing forgiveness (0-1).
 share/follow: propensity (0-1). Optional "curiosity": extra hook trigger words for the niche."""
 import json

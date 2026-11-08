@@ -37,3 +37,13 @@ def test_calibration(tmp_path, monkeypatch):
     assert info["score_corr"] > 0.9
     assert abs(sum(w.values()) - 1) < 0.01
     assert calibrate.weights() == w
+
+
+def test_video_facts():
+    from reachsim.video import Facts
+    good = Facts(20, [(0.1, 2.5, "Stop wasting 3 hours on this gym mistake."), (2.6, 12, "Do 3 sets and track every rep. Follow for more.")])
+    slow = Facts(20, [(2.5, 4, "Stop wasting 3 hours on this gym mistake."), (7, 12, "Do 3 sets and track every rep. Follow for more.")])
+    g, s = simulate("", "fitness", use_llm=False, facts=good), simulate("", "fitness", use_llm=False, facts=slow)
+    assert g.score > s.score
+    assert any("Nothing is said" in i for i in s.issues) and any("pause" in i for i in s.issues)
+    assert g.est_seconds == 20

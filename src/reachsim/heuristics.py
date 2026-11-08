@@ -44,10 +44,10 @@ def hook_score(hook: str):
     return max(0, min(100, s)), issues
 
 
-def structure(script: str, hook: str, body: str):
+def structure(script: str, hook: str, body: str, dur: float = None):
     """Retention/shareability score 0-100 plus issues and estimated duration."""
     words = len(script.split())
-    dur = words / WPS
+    dur = dur or words / WPS
     s, issues = 50, []
     if dur < 8:
         s -= 10; issues.append("Under 8s: too short to deliver value or earn a follow.")

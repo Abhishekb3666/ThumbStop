@@ -9,6 +9,7 @@ dependencies = []
 
 [project.optional-dependencies]
 llm = ["anthropic>=0.40"]
+video = ["faster-whisper>=1.0"]
 dev = ["pytest"]
 
 [project.scripts]

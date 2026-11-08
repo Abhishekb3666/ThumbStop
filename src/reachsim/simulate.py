@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from . import heuristics as H, llm
+from . import heuristics as H, llm, video
 from .calibrate import weights
 from .personas import audience
 
@@ -33,10 +33,13 @@ def _c(x):
     return max(0.0, min(1.0, x))
 
 
-def simulate(script: str, niche: str = "general", use_llm=None) -> Report:
-    hook, body = H.split(script)
+def simulate(script: str, niche: str = "general", use_llm=None, facts=None) -> Report:
+    hook, body = video.hook_body(facts) if facts else H.split(script)
     hs, hi = H.hook_score(hook)
-    ss, si, dur = H.structure(script, hook, body)
+    ss, si, dur = H.structure(script, hook, body, facts.duration if facts else None)
+    if facts:
+        hd, sd, vi = video.adjust(facts)
+        hs, ss, hi = max(0, hs + hd), max(0, ss + sd), hi + vi
     people = audience(niche)
 
     rx, hooks, fixes, mode = {}, [], [], "heuristic"

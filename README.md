@@ -28,3 +28,9 @@ reachsim analyze s.txt --save day1                 # remember the prediction
 reachsim result day1 --media-id <IG_MEDIA_ID> x=0  # or: result day1 reach=900 likes=50 comments=4 shares=9 saved=12
 reachsim calibrate                                 # after 5+ posts, re-weights the score toward what actually predicts engagement
 ```
+
+## Video input
+```bash
+pip install -e ".[video]"
+reachsim analyze reel.mp4 --niche fitness   # transcribes, scores the real first 3s, dead air and pacing
+```

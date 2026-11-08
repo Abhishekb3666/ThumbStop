@@ -2,7 +2,7 @@ import argparse
 import json
 import sys
 
-from . import calibrate, instagram, planner
+from . import calibrate, instagram, planner, video
 from .simulate import simulate
 
 
@@ -10,7 +10,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(prog="reachsim")
     sub = ap.add_subparsers(dest="cmd", required=True)
     a = sub.add_parser("analyze", help="score a script/caption and suggest better hooks")
-    a.add_argument("file", help="text file with your script, or - for stdin")
+    a.add_argument("file", help="script .txt, - for stdin, or a video/audio file")
     a.add_argument("--niche", default="general")
     a.add_argument("--json", action="store_true")
     a.add_argument("--no-llm", action="store_true")
@@ -31,8 +31,15 @@ def main(argv=None):
     args = ap.parse_args(argv)
 
     if args.cmd == "analyze":
-        text = sys.stdin.read() if args.file == "-" else open(args.file, encoding="utf-8").read()
-        r = simulate(text, args.niche, use_llm=False if args.no_llm else None)
+        facts = None
+        if args.file.lower().endswith(video.VIDEO_EXT):
+            facts = video.transcribe(args.file)
+            text = video.script(facts)
+            print(f'Transcript: "{text[:200]}"
+')
+        else:
+            text = sys.stdin.read() if args.file == "-" else open(args.file, encoding="utf-8").read()
+        r = simulate(text, args.niche, use_llm=False if args.no_llm else None, facts=facts)
         if args.save:
             calibrate.record(args.save, r)
         if args.json:

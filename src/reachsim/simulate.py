@@ -1,7 +1,12 @@
 from dataclasses import dataclass, field
 
 from . import heuristics as H, llm
+from .calibrate import weights
 from .personas import audience
+
+
+def signals(stop, watch, share, follow):
+    return {"stop": stop, "watch": watch, "share": min(1, share * 8), "follow": min(1, follow * 10)}
 
 
 @dataclass
@@ -19,6 +24,9 @@ class Report:
     hooks: list = field(default_factory=list)
     reactions: dict = field(default_factory=dict)
     mode: str = "heuristic"
+
+    def signals(self):
+        return signals(self.stop_rate, self.stop_rate * self.avg_watch, self.share_rate, self.follow_rate)
 
 
 def _c(x):
@@ -53,7 +61,9 @@ def simulate(script: str, niche: str = "general", use_llm=None) -> Report:
         share += p.weight * sh
         follow += p.weight * fo
     avg_watch = watch / stop if stop else 0.0
-    score = round(100 * (0.4 * stop + 0.3 * watch + 0.2 * min(1, share * 8) + 0.1 * min(1, follow * 10)))
+    sig = signals(stop, watch, share, follow)
+    w = weights()
+    score = round(100 * sum(w[k] * sig[k] for k in sig))
     tier = "low" if score < 35 else "average" if score < 55 else "good" if score < 75 else "viral potential"
     return Report(score, tier, hs, ss, round(dur, 1), round(stop, 3), round(avg_watch, 3),
                   round(share, 3), round(follow, 3), hi + si + fixes, hooks,

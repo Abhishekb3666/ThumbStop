@@ -21,3 +21,10 @@ Fix these:
 ```
 
 See [PLAN.md](PLAN.md) for the roadmap. Contributions welcome: persona packs, better heuristics, calibration data. MIT licensed.
+
+## Calibration (learn from your real results)
+```bash
+reachsim analyze s.txt --save day1                 # remember the prediction
+reachsim result day1 --media-id <IG_MEDIA_ID> x=0  # or: result day1 reach=900 likes=50 comments=4 shares=9 saved=12
+reachsim calibrate                                 # after 5+ posts, re-weights the score toward what actually predicts engagement
+```

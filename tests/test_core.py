@@ -22,3 +22,18 @@ def test_score_bounds():
 
 def test_plan_len():
     assert len(plan("fitness", 7, 2)) == 14
+
+
+def test_calibration(tmp_path, monkeypatch):
+    from reachsim import calibrate
+    monkeypatch.setenv("REACHSIM_HOME", str(tmp_path))
+    scripts = [BAD, GOOD, "Stop. 3 mistakes you make daily? Follow.", "hi everyone so today", GOOD + " Save this.", BAD + " more"]
+    for i, s in enumerate(scripts):
+        r = simulate(s, "fitness", use_llm=False)
+        calibrate.record(f"p{i}", r)
+        # fake reality: engagement tracks predicted score
+        calibrate.update(f"p{i}", reach=1000, likes=r.score * 2, comments=0, shares=0, saved=0)
+    w, info = calibrate.fit()
+    assert info["score_corr"] > 0.9
+    assert abs(sum(w.values()) - 1) < 0.01
+    assert calibrate.weights() == w

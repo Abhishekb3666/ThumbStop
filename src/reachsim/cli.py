@@ -2,7 +2,7 @@ import argparse
 import json
 import sys
 
-from . import instagram, planner
+from . import calibrate, instagram, planner
 from .simulate import simulate
 
 
@@ -14,6 +14,12 @@ def main(argv=None):
     a.add_argument("--niche", default="general")
     a.add_argument("--json", action="store_true")
     a.add_argument("--no-llm", action="store_true")
+    a.add_argument("--save", metavar="NAME", help="remember this prediction for calibration")
+    r = sub.add_parser("result", help="record real metrics: result NAME reach=1200 likes=80 ...")
+    r.add_argument("name")
+    r.add_argument("metrics", nargs="+")
+    r.add_argument("--media-id", help="Instagram media id; fetch metrics automatically")
+    sub.add_parser("calibrate", help="fit score weights from recorded real results")
     p = sub.add_parser("plan", help="make a posting calendar")
     p.add_argument("--niche", default="general")
     p.add_argument("--days", type=int, default=7)
@@ -27,6 +33,8 @@ def main(argv=None):
     if args.cmd == "analyze":
         text = sys.stdin.read() if args.file == "-" else open(args.file, encoding="utf-8").read()
         r = simulate(text, args.niche, use_llm=False if args.no_llm else None)
+        if args.save:
+            calibrate.record(args.save, r)
         if args.json:
             print(json.dumps(r.__dict__, indent=2))
             return
@@ -43,6 +51,17 @@ def main(argv=None):
             print("\nTry these hooks:")
             for h in r.hooks:
                 print(f"  * {h}")
+    elif args.cmd == "result":
+        m = {}
+        if args.media_id:
+            for d in instagram.insights(args.media_id)["data"]:
+                m[d["name"]] = d["values"][0]["value"]
+        m.update({k: float(v) for k, v in (x.split("=") for x in args.metrics if "=" in x)})
+        calibrate.update(args.name, **m)
+        print(f"saved {args.name}: {m}")
+    elif args.cmd == "calibrate":
+        w, info = calibrate.fit()
+        print(json.dumps({"weights": w, **info}, indent=2))
     elif args.cmd == "plan":
         for s in planner.plan(args.niche, args.days, args.per_day):
             print(f"{s['date']} {s['time']}  {s['pillar']:<20} {s['idea']}")

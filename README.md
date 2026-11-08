@@ -22,6 +22,18 @@ Fix these:
 
 See [ROADMAP.md](ROADMAP.md) for the roadmap. Contributions welcome: persona packs, better heuristics, calibration data. MIT licensed.
 
+## Crowd simulation (every metric, every format)
+Simulates a population of viewers (age groups, user types, interests, followers vs cold feed) deciding whether to skip, how long to stay, and what to do.
+```bash
+thumbstop crowd reel.mp4 --niche fitness                      # video/audio: transcribed, real timings
+thumbstop crowd slides/ --kind carousel --caption "..."       # folder of slide1.txt.. (or images + API key for vision)
+thumbstop crowd post.json                                     # spec: {"kind","slides"|"script"|"body","caption","topics"}
+thumbstop crowd post.txt --kind text --platform linkedin -n 5000 --followers 0.1
+thumbstop crowd reel.txt --kind reel --hooks                  # LLM writes hooks, the same crowd re-scores each
+```
+Reports skip rate, 3s hold, retention curve (or reach per slide), watch %, completion, replays, likes, comments, shares, saves, profile visits, follows, link clicks, not-interested, engagement, with +/- error bars and tables by age, user type, and followers vs cold feed. The score compares your post to a neutral average post of the same kind, topic and length shown to the same crowd (50 = average).
+The population priors in `demographics.py` are assumptions, not measured data: use results to compare drafts and find weak segments, and run `calibrate` against your real numbers.
+
 ## Calibration (learn from your real results)
 ```bash
 thumbstop analyze s.txt --save day1                 # remember the prediction

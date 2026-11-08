@@ -3,40 +3,50 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ThumbStop - will your hook land?</title>
-<meta name="description" content="Paste your Reel or Short script. A simulated audience scores it and tells you how to fix the hook.">
+<title>ThumbStop - test your post on a simulated crowd</title>
+<meta name="description" content="Simulate thousands of viewers of every age and type reacting to your reel, carousel or post before you publish.">
 <style>
 :root{--bg:#0e0f13;--card:#171921;--line:#272a36;--text:#eceef5;--mute:#8d93a7;--accent:#ff4d6d;--good:#3ddc97;--mid:#ffc857;--bad:#ff5d6c}
 @media (prefers-color-scheme:light){:root{--bg:#f6f6f9;--card:#fff;--line:#e3e4ec;--text:#16171d;--mute:#666b80}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-main{max-width:880px;margin:0 auto;padding:40px 16px 64px}
+main{max-width:960px;margin:0 auto;padding:40px 16px 64px}
 h1{font-size:clamp(28px,5vw,44px);line-height:1.1;margin:0 0 8px;letter-spacing:-.02em}
 h1 span{color:var(--accent)}
 .sub{color:var(--mute);margin:0 0 28px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
-textarea{width:100%;min-height:140px;resize:vertical;background:transparent;color:inherit;border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit}
-textarea:focus,input:focus{outline:2px solid var(--accent);outline-offset:1px}
-.row{display:flex;gap:12px;margin-top:12px;flex-wrap:wrap}
-input{flex:1;min-width:160px;background:transparent;color:inherit;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit}
-button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:10px 22px;font:inherit;font-weight:600;cursor:pointer}
+textarea,input,select{width:100%;background:transparent;color:inherit;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit}
+select option{background:var(--card);color:var(--text)}
+textarea{min-height:150px;resize:vertical}
+textarea:focus,input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:12px}
+label.l{display:block;font-size:13px;color:var(--mute);margin-bottom:4px}
+button{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:11px 24px;font:inherit;font-weight:600;cursor:pointer;margin-top:14px}
 button:disabled{opacity:.6;cursor:wait}
 .hint{color:var(--mute);font-size:14px;margin-top:8px}
 #out{margin-top:24px;display:none}
 .top{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
-.dial{--p:0;--c:var(--mid);width:140px;height:140px;border-radius:50%;display:grid;place-items:center;flex:none;
-  background:conic-gradient(var(--c) calc(var(--p)*1%),var(--line) 0)}
+.dial{--p:0;--c:var(--mid);width:140px;height:140px;border-radius:50%;display:grid;place-items:center;flex:none;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--line) 0)}
 .dial div{width:112px;height:112px;border-radius:50%;background:var(--card);display:grid;place-items:center;text-align:center}
 .dial b{font-size:38px;line-height:1}
-.dial small{display:block;color:var(--mute);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
-.bars{flex:1;min-width:240px;display:grid;gap:10px}
-.bar label{display:flex;justify-content:space-between;font-size:14px;color:var(--mute)}
-.bar i{display:block;height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:4px}
-.bar i b{display:block;height:100%;background:var(--accent)}
-h2{font-size:16px;margin:24px 0 8px}
-ul{margin:0;padding-left:20px}li{margin:4px 0}
+.dial small{display:block;color:var(--mute);font-size:10px;max-width:92px;text-transform:uppercase;letter-spacing:.08em}
+.meta{flex:1;min-width:220px;color:var(--mute);font-size:14px}
+.meta b{color:var(--text)}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:20px}
+.m{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.m small{display:block;color:var(--mute);font-size:12px}
+.m b{font-size:20px}
+.m em{font-style:normal;color:var(--mute);font-size:12px}
+h2{font-size:16px;margin:26px 0 8px}
+.chart{display:flex;align-items:flex-end;gap:6px;height:120px;margin-top:22px;border-bottom:1px solid var(--line)}
+.chart div{flex:1;background:var(--accent);border-radius:4px 4px 0 0;position:relative;min-height:2px}
+.chart span{position:absolute;top:-18px;left:0;right:0;text-align:center;font-size:11px;color:var(--mute)}
+.axis{display:flex;gap:6px;font-size:11px;color:var(--mute)}.axis span{flex:1;text-align:center}
+.scroll{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:14px}
-td,th{text-align:left;padding:6px 8px;border-top:1px solid var(--line)}th{color:var(--mute);font-weight:500;border:0}
+td,th{text-align:left;padding:6px 8px;border-top:1px solid var(--line);white-space:nowrap}th{color:var(--mute);font-weight:500;border:0}
+.skip{display:inline-block;height:6px;border-radius:3px;background:var(--bad);vertical-align:middle;margin-left:6px}
+ul{margin:0;padding-left:20px}li{margin:4px 0}
 .err{color:var(--bad);margin-top:12px}
 footer{color:var(--mute);font-size:13px;margin-top:32px}
 a{color:var(--accent)}
@@ -44,57 +54,80 @@ a{color:var(--accent)}
 </head>
 <body>
 <main>
-  <h1>Will your hook <span>land</span>?</h1>
-  <p class="sub">Paste your Reel / Short / TikTok script. A simulated audience scrolls past it, or doesn't.</p>
+  <h1>Test your post on a <span>crowd</span></h1>
+  <p class="sub">Thousands of simulated viewers of every age and type scroll past your reel, carousel or post. See who skips, who stays, and what to fix, before you publish.</p>
   <form class="card" id="f">
-    <textarea id="script" maxlength="4000" aria-label="Your script" placeholder="Stop wasting 3 hours a day on this gym mistake. Most people never fix it..."></textarea>
-    <div class="row">
-      <input id="niche" list="packs" value="general" aria-label="Niche" placeholder="Niche (fitness, finance, food, tech, ...)">
-      <datalist id="packs"><option>fitness<option>finance<option>food<option>tech</datalist>
-      <button id="go">Score it</button>
+    <textarea id="text" maxlength="5000" aria-label="Your post" placeholder="Reel/video/audio: paste the script.&#10;Carousel: one slide per block, separate slides with a line containing ---&#10;Text/image post: paste the text."></textarea>
+    <div class="grid">
+      <div><label class="l" for="kind">Format</label>
+        <select id="kind"><option value="reel">Reel / Short</option><option value="video">Long video</option><option value="carousel">Carousel</option><option value="image">Image post</option><option value="audio">Audio / podcast clip</option><option value="text">Text post</option></select></div>
+      <div><label class="l" for="platform">Platform</label>
+        <select id="platform"><option value="instagram">Instagram</option><option value="tiktok">TikTok</option><option value="youtube">YouTube</option><option value="linkedin">LinkedIn</option><option value="x">X</option></select></div>
+      <div><label class="l" for="niche">Niche</label><input id="niche" list="packs" value="general"><datalist id="packs"><option>fitness<option>finance<option>food<option>tech</datalist></div>
+      <div><label class="l" for="topics">Topics (optional)</label><input id="topics" placeholder="fitness, health"></div>
+      <div><label class="l" for="followers">Followers in crowd</label>
+        <select id="followers"><option value="0">0% (new account)</option><option value="0.25" selected>25%</option><option value="0.5">50%</option><option value="0.8">80% (loyal)</option></select></div>
     </div>
-    <div class="hint">Tip: the first line is treated as your hook. Quick offline estimate; accuracy improves as you calibrate with real results.</div>
+    <label class="l" for="caption" style="margin-top:12px">Caption (optional)</label>
+    <input id="caption" maxlength="1000" placeholder="Which one are you? Save this for later.">
+    <button id="go">Simulate crowd</button>
+    <div class="hint">Estimates from a simulated population: good for comparing drafts and finding weak spots, not a promise of reach. Files (video, audio, images) work through the CLI.</div>
     <div class="err" id="err" role="alert"></div>
   </form>
 
   <section class="card" id="out" aria-live="polite">
     <div class="top">
       <div class="dial" id="dial"><div><span><b id="score">0</b><small id="tier"></small></span></div></div>
-      <div class="bars" id="bars"></div>
+      <div class="meta" id="meta"></div>
     </div>
-    <h2>Fix these</h2><ul id="issues"></ul>
-    <div id="hooksWrap" hidden><h2>Try these hooks</h2><ul id="hooks"></ul></div>
-    <h2>Who stays, who swipes</h2>
-    <table><thead><tr><th>Viewer</th><th>Stops</th><th>Watches</th><th>Shares</th></tr></thead><tbody id="people"></tbody></table>
+    <div class="metrics" id="metrics"></div>
+    <h2 id="chartTitle">Retention</h2>
+    <div class="chart" id="chart"></div><div class="axis" id="axis"></div>
+    <h2>What to fix</h2><ul id="insights"></ul>
+    <h2>By age group</h2><div class="scroll"><table id="t-age"></table></div>
+    <h2>By user type</h2><div class="scroll"><table id="t-user_type"></table></div>
+    <h2>Followers vs cold feed</h2><div class="scroll"><table id="t-audience"></table></div>
   </section>
   <footer>Open source (MIT) · <a href="https://github.com/Abhishekb3666/thumbstop">github.com/Abhishekb3666/thumbstop</a></footer>
 </main>
 <script>
-const $ = id => document.getElementById(id), pct = x => Math.round(x * 100) + "%";
+const $ = id => document.getElementById(id), pc = (x, d = 0) => (x * 100).toFixed(d) + "%";
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 $("f").addEventListener("submit", async e => {
   e.preventDefault(); $("err").textContent = ""; $("go").disabled = true; $("go").textContent = "Simulating...";
   try {
-    const res = await fetch("/api/analyze", {method: "POST", headers: {"content-type": "application/json"},
-      body: JSON.stringify({script: $("script").value, niche: $("niche").value})});
+    const res = await fetch("/api/crowd", {method: "POST", headers: {"content-type": "application/json"}, body: JSON.stringify({
+      text: $("text").value, caption: $("caption").value, kind: $("kind").value, platform: $("platform").value,
+      niche: $("niche").value, topics: $("topics").value, followers: +$("followers").value, n: 2000})});
     const r = await res.json();
     if (!res.ok) throw new Error(r.error || "Something went wrong.");
     show(r);
   } catch (x) { $("err").textContent = x.message; }
-  $("go").disabled = false; $("go").textContent = "Score it";
+  $("go").disabled = false; $("go").textContent = "Simulate crowd";
 });
 function show(r) {
   $("out").style.display = "block";
   $("score").textContent = r.score; $("tier").textContent = r.tier;
   const d = $("dial"); d.style.setProperty("--p", r.score);
   d.style.setProperty("--c", r.score >= 55 ? "var(--good)" : r.score >= 35 ? "var(--mid)" : "var(--bad)");
-  const bars = [["Hook strength", r.hook_score], ["Structure & pacing", r.structure_score],
-    ["Stop the scroll", r.stop_rate * 100], ["Watch-through", r.avg_watch * 100]];
-  $("bars").innerHTML = bars.map(([n, v]) => `<div class="bar"><label><span>${n}</span><span>${Math.round(v)}%</span></label><i><b style="width:${Math.min(100, v)}%"></b></i></div>`).join("");
-  $("issues").innerHTML = (r.issues.length ? r.issues : ["Nothing obvious - nice."]).map(i => `<li>${esc(i)}</li>`).join("");
-  $("hooksWrap").hidden = !r.hooks.length; $("hooks").innerHTML = r.hooks.map(h => `<li>${esc(h)}</li>`).join("");
-  $("people").innerHTML = Object.entries(r.breakdown).map(([n, v]) =>
-    `<tr><td>${esc(n)}</td><td>${pct(v.stop)}</td><td>${pct(v.watch)}</td><td>${pct(v.share)}</td></tr>`).join("");
+  $("meta").innerHTML = `<b>${esc(r.kind)}</b> on <b>${esc(r.platform)}</b> · ${r.n} simulated users · ~${r.duration}s<br>` +
+    `Topics: ${esc(r.topics.join(", ") || "none detected")}<br>50 = a neutral average post, 100 = double on every metric` +
+    (r.warnings.length ? `<br>${r.warnings.map(esc).join("<br>")}` : "");
+  const m = r.metrics, ci = r.ci, card = (n, k) => `<div class="m"><small>${n}</small><b>${pc(m[k], m[k] < .1 ? 1 : 0)}</b>${ci[k] ? ` <em>±${pc(ci[k], 1)}</em>` : ""}</div>`;
+  $("metrics").innerHTML = [["Skip rate","skip_rate"],["3s hold","hold_rate"],["Avg watched","avg_watch_pct"],["Completion","completion_rate"],
+    ["Likes","like_rate"],["Comments","comment_rate"],["Shares","share_rate"],["Saves","save_rate"],["Profile visits","profile_visit_rate"],
+    ["Follows","follow_rate"],["Engagement","engagement_rate"],["Not interested","not_interested_rate"]].map(a => card(...a)).join("");
+  const slides = r.slide_reach.length, pts = slides ? r.slide_reach : r.retention;
+  $("chartTitle").textContent = slides ? "Viewers reaching each slide" : "Retention through the post";
+  $("chart").innerHTML = pts.map(p => `<div style="height:${Math.max(2, p.pct * 100)}%"><span>${pc(p.pct)}</span></div>`).join("");
+  $("axis").innerHTML = pts.map(p => `<span>${slides ? p.slide : p.at}</span>`).join("");
+  $("insights").innerHTML = [...r.insights, ...r.hook_issues].map(i => `<li>${esc(i)}</li>`).join("") || "<li>Nothing obvious - nice.</li>";
+  for (const k of ["age", "user_type", "audience"]) {
+    const rows = r.segments[k] || {};
+    $("t-" + k).innerHTML = `<tr><th></th><th>Users</th><th>Skip</th><th>Watched</th><th>Likes</th><th>Shares</th><th>Saves</th></tr>` +
+      Object.entries(rows).map(([l, v]) => `<tr><td>${esc(l)}</td><td>${v.n}</td><td>${pc(v.skip_rate)}<span class="skip" style="width:${v.skip_rate * 60}px"></span></td>` +
+        `<td>${pc(v.avg_watch_pct)}</td><td>${pc(v.like_rate, 1)}</td><td>${pc(v.share_rate, 1)}</td><td>${pc(v.save_rate, 1)}</td></tr>`).join("");
+  }
   $("out").scrollIntoView({behavior: "smooth", block: "nearest"});
 }
 </script>

@@ -107,3 +107,13 @@ def test_cli_crowd(tmp_path, monkeypatch, capsys):
     assert "CROWD SCORE" in out and "skip rate" in out and "By age" in out
     main(["crowd", str(f), "--kind", "reel", "-n", "300", "--json"])
     assert json.loads(capsys.readouterr().out)["kind"] == "reel"
+
+
+def test_web_crowd_api(tmp_path, monkeypatch):
+    monkeypatch.setenv("THUMBSTOP_HOME", str(tmp_path))
+    from api.crowd import run as web
+    code, out = web({"kind": "carousel", "text": "\n---\n".join(SLIDES), "niche": "fitness", "n": 300})
+    assert code == 200 and out["kind"] == "carousel" and len(out["slide_reach"]) == 5
+    assert web({"text": ""})[0] == 400 and web({"text": "x", "kind": "hologram"})[0] == 400
+    assert web({"text": "x", "platform": "myspace"})[0] == 400 and web({"text": "x" * 7000})[0] == 400
+    assert web({"text": "hi", "n": 10**9})[1]["n"] == 3000

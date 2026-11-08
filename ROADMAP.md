@@ -11,6 +11,7 @@
 | 3 | Video input: Whisper transcript, real first-3s hook, duration, dead air, pace (scene-cut and visual checks still todo) | done |
 | 4 | Niche persona packs: JSON files (built-in fitness, finance, food, tech; yours in ~/.thumbstop/packs) with niche hook words | done |
 | 5 | Web UI: static page + Python function on Vercel (`public/`, `api/analyze.py`), local preview via `python dev_server.py` | done |
+| 7 | **Crowd simulation:** thousands of synthetic users (6 age groups x 7 user types x 20 interests x follower/cold) on reels, videos, carousels, images, audio and text across 5 platforms; skip, retention, likes, comments, shares, saves, follows, per-segment tables, hook re-ranking | done |
 | 6 | Trend ingestion: `thumbstop trends` (Google Trends, Reddit RSS per-niche subreddits, Hacker News for tech) ranked by the hook scorer; no trending-audio source (Instagram has no public API) | done |
 
 ## Own Instagram page (the dogfooding channel)

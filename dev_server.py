@@ -3,11 +3,12 @@ from functools import partial
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 from api.analyze import handler as analyze
+from api.crowd import handler as crowd_api
 
 
 class Dev(SimpleHTTPRequestHandler):
     def do_POST(self):
-        analyze.do_POST(self)
+        (crowd_api if self.path.startswith('/api/crowd') else analyze).do_POST(self)
 
 
 if __name__ == "__main__":

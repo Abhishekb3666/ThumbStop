@@ -1,3 +1,6 @@
 {
-  "functions": { "api/analyze.py": { "includeFiles": "src/**" } }
+  "functions": {
+    "api/analyze.py": { "includeFiles": "src/**" },
+    "api/crowd.py": { "includeFiles": "src/**" }
+  }
 }

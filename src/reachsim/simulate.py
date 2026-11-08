@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 
 from . import heuristics as H, llm, video
 from .calibrate import weights
-from .personas import audience
+from .personas import load
 
 
 def signals(stop, watch, share, follow):
@@ -35,12 +35,12 @@ def _c(x):
 
 def simulate(script: str, niche: str = "general", use_llm=None, facts=None) -> Report:
     hook, body = video.hook_body(facts) if facts else H.split(script)
-    hs, hi = H.hook_score(hook)
+    people, extra = load(niche)
+    hs, hi = H.hook_score(hook, extra)
     ss, si, dur = H.structure(script, hook, body, facts.duration if facts else None)
     if facts:
         hd, sd, vi = video.adjust(facts)
         hs, ss, hi = max(0, hs + hd), max(0, ss + sd), hi + vi
-    people = audience(niche)
 
     rx, hooks, fixes, mode = {}, [], [], "heuristic"
     if use_llm is None:

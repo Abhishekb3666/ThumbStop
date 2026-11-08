@@ -1,0 +1,7 @@
+{"curiosity": ["gains", "plateau", "fat loss", "form", "protein", "reps", "bulk", "cut", "injury"], "personas": [
+ {"name": "Gym newbie", "weight": 0.30, "hook_sens": 0.8, "patience": 0.5, "share": 0.15, "follow": 0.12, "bio": "Just joined a gym, scared of doing it wrong, wants simple routines."},
+ {"name": "Lifter on a plateau", "weight": 0.20, "hook_sens": 0.7, "patience": 0.6, "share": 0.10, "follow": 0.15, "bio": "Trains 4x/week, stuck, hunts for a missing detail."},
+ {"name": "Fat-loss scroller", "weight": 0.25, "hook_sens": 0.95, "patience": 0.2, "share": 0.12, "follow": 0.03, "bio": "Wants a quick fix, swipes away from anything that sounds like effort."},
+ {"name": "Evidence-based skeptic", "weight": 0.10, "hook_sens": 0.5, "patience": 0.5, "share": 0.05, "follow": 0.05, "bio": "Distrusts bro-science; wants numbers and sources."},
+ {"name": "Training-partner sharer", "weight": 0.15, "hook_sens": 0.7, "patience": 0.5, "share": 0.50, "follow": 0.10, "bio": "Sends useful lifts and funny gym fails to the group chat."}
+]}

@@ -2,7 +2,7 @@ import argparse
 import json
 import sys
 
-from . import calibrate, instagram, planner, video
+from . import calibrate, instagram, personas, planner, video
 from .simulate import simulate
 
 
@@ -20,6 +20,7 @@ def main(argv=None):
     r.add_argument("metrics", nargs="+")
     r.add_argument("--media-id", help="Instagram media id; fetch metrics automatically")
     sub.add_parser("calibrate", help="fit score weights from recorded real results")
+    sub.add_parser("packs", help="list niche persona packs")
     p = sub.add_parser("plan", help="make a posting calendar")
     p.add_argument("--niche", default="general")
     p.add_argument("--days", type=int, default=7)
@@ -35,8 +36,7 @@ def main(argv=None):
         if args.file.lower().endswith(video.VIDEO_EXT):
             facts = video.transcribe(args.file)
             text = video.script(facts)
-            print(f'Transcript: "{text[:200]}"
-')
+            print(f'Transcript: "{text[:200]}"\n')
         else:
             text = sys.stdin.read() if args.file == "-" else open(args.file, encoding="utf-8").read()
         r = simulate(text, args.niche, use_llm=False if args.no_llm else None, facts=facts)
@@ -69,6 +69,10 @@ def main(argv=None):
     elif args.cmd == "calibrate":
         w, info = calibrate.fit()
         print(json.dumps({"weights": w, **info}, indent=2))
+    elif args.cmd == "packs":
+        print("
+".join(personas.available()))
+        print("add your own:", calibrate.home() / "packs" / "<niche>.json")
     elif args.cmd == "plan":
         for s in planner.plan(args.niche, args.days, args.per_day):
             print(f"{s['date']} {s['time']}  {s['pillar']:<20} {s['idea']}")

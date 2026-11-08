@@ -9,7 +9,7 @@
 | 1 | LLM persona simulation (Claude), rewritten hooks, `--json` output | done (needs `ANTHROPIC_API_KEY`) |
 | 2 | **Calibration loop:** store predicted score vs real IG insights (`reachsim.instagram.insights`), fit weights so the score tracks reality | done (`analyze --save`, `result`, `calibrate`) |
 | 3 | Video input: Whisper transcript, real first-3s hook, duration, dead air, pace (scene-cut and visual checks still todo) | done |
-| 4 | Niche-specific persona packs (fitness, finance, food, tech...) in YAML, community-contributed | |
+| 4 | Niche persona packs: JSON files (built-in fitness, finance, food, tech; yours in ~/.reachsim/packs) with niche hook words | done |
 | 5 | Web UI (Next.js on Vercel): paste script, see per-persona reactions | |
 | 6 | Trend ingestion: pull trending audio/topics to seed ideas | |
 

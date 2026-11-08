@@ -17,7 +17,7 @@ def split(script: str):
     return hook, " ".join(words[len(hook.split()):])
 
 
-def hook_score(hook: str):
+def hook_score(hook: str, extra=()):
     """0-100 plus a list of issues."""
     h, issues, s = hook.lower(), [], 40
     n = len(hook.split())
@@ -37,7 +37,7 @@ def hook_score(hook: str):
         s += 10
     else:
         issues.append("Hook never addresses the viewer ('you') directly.")
-    if any(w in h for w in CURIOSITY):
+    if any(w in h for w in CURIOSITY + tuple(extra)):
         s += 18
     else:
         issues.append("No curiosity gap or tension - promise a payoff the viewer must watch to get.")

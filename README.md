@@ -34,3 +34,7 @@ reachsim calibrate                                 # after 5+ posts, re-weights 
 pip install -e ".[video]"
 reachsim analyze reel.mp4 --niche fitness   # transcribes, scores the real first 3s, dead air and pacing
 ```
+
+## Persona packs
+Each niche has its own audience and hook trigger words. `reachsim packs` lists them; `--niche fitness` picks one.
+Make your own by dropping `~/.reachsim/packs/<niche>.json` (see `src/reachsim/packs/fitness.json` for the format) - PRs with new packs are welcome.

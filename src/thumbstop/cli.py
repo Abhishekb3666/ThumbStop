@@ -2,7 +2,7 @@ import argparse
 import json
 import sys
 
-from . import calibrate, instagram, personas, planner, video
+from . import calibrate, instagram, personas, planner, trends, video
 from .simulate import simulate
 
 
@@ -21,6 +21,10 @@ def main(argv=None):
     r.add_argument("--media-id", help="Instagram media id; fetch metrics automatically")
     sub.add_parser("calibrate", help="fit score weights from recorded real results")
     sub.add_parser("packs", help="list niche persona packs")
+    t = sub.add_parser("trends", help="what is trending in your niche + hook ideas")
+    t.add_argument("--niche", default="general")
+    t.add_argument("--geo", default="US")
+    t.add_argument("--ideas", type=int, default=5)
     p = sub.add_parser("plan", help="make a posting calendar")
     p.add_argument("--niche", default="general")
     p.add_argument("--days", type=int, default=7)
@@ -69,6 +73,14 @@ def main(argv=None):
     elif args.cmd == "calibrate":
         w, info = calibrate.fit()
         print(json.dumps({"weights": w, **info}, indent=2))
+    elif args.cmd == "trends":
+        found, errs = trends.fetch(args.niche, args.geo)
+        for i in trends.ideas(found, args.niche, args.ideas):
+            print(f"[{i['hook_score']:>3}] {i['hook']}   ({i['source']})")
+        if not found:
+            print("No trends found.")
+        for e in errs:
+            print("warning:", e)
     elif args.cmd == "packs":
         print("\n".join(personas.available()))
         print("add your own:", calibrate.home() / "packs" / "<niche>.json")

@@ -1,7 +1,65 @@
-{"curiosity": ["debt", "invest", "saving", "tax", "salary", "broke", "rich", "budget", "interest", "index"], "personas": [
- {"name": "Broke beginner", "weight": 0.30, "hook_sens": 0.85, "patience": 0.5, "share": 0.15, "follow": 0.10, "bio": "Living paycheck to paycheck, wants one actionable money step."},
- {"name": "Side-hustle seeker", "weight": 0.20, "hook_sens": 0.9, "patience": 0.3, "share": 0.12, "follow": 0.05, "bio": "Chasing extra income, swipes from vague get-rich claims."},
- {"name": "Index-fund investor", "weight": 0.15, "hook_sens": 0.5, "patience": 0.7, "share": 0.10, "follow": 0.20, "bio": "Already invests; wants nuance, mistrusts hype."},
- {"name": "Scam-wary skeptic", "weight": 0.20, "hook_sens": 0.6, "patience": 0.4, "share": 0.05, "follow": 0.03, "bio": "Burned by finfluencers; leaves at the first sales pitch."},
- {"name": "Money-friend sharer", "weight": 0.15, "hook_sens": 0.7, "patience": 0.5, "share": 0.45, "follow": 0.10, "bio": "Forwards tips to partner and friends."}
-]}
+{
+ "curiosity": [
+  "debt",
+  "invest",
+  "saving",
+  "tax",
+  "salary",
+  "broke",
+  "rich",
+  "budget",
+  "interest",
+  "index"
+ ],
+ "personas": [
+  {
+   "name": "Broke beginner",
+   "weight": 0.3,
+   "hook_sens": 0.85,
+   "patience": 0.5,
+   "share": 0.15,
+   "follow": 0.1,
+   "bio": "Living paycheck to paycheck, wants one actionable money step."
+  },
+  {
+   "name": "Side-hustle seeker",
+   "weight": 0.2,
+   "hook_sens": 0.9,
+   "patience": 0.3,
+   "share": 0.12,
+   "follow": 0.05,
+   "bio": "Chasing extra income, swipes from vague get-rich claims."
+  },
+  {
+   "name": "Index-fund investor",
+   "weight": 0.15,
+   "hook_sens": 0.5,
+   "patience": 0.7,
+   "share": 0.1,
+   "follow": 0.2,
+   "bio": "Already invests; wants nuance, mistrusts hype."
+  },
+  {
+   "name": "Scam-wary skeptic",
+   "weight": 0.2,
+   "hook_sens": 0.6,
+   "patience": 0.4,
+   "share": 0.05,
+   "follow": 0.03,
+   "bio": "Burned by finfluencers; leaves at the first sales pitch."
+  },
+  {
+   "name": "Money-friend sharer",
+   "weight": 0.15,
+   "hook_sens": 0.7,
+   "patience": 0.5,
+   "share": 0.45,
+   "follow": 0.1,
+   "bio": "Forwards tips to partner and friends."
+  }
+ ],
+ "subreddits": [
+  "personalfinance",
+  "financialindependence"
+ ]
+}

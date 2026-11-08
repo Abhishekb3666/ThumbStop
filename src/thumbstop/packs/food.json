@@ -1,7 +1,64 @@
-{"curiosity": ["recipe", "easy", "crispy", "juicy", "minutes", "budget", "leftover", "mistake", "secret"], "personas": [
- {"name": "Weeknight cook", "weight": 0.30, "hook_sens": 0.8, "patience": 0.5, "share": 0.20, "follow": 0.12, "bio": "Wants a fast dinner idea with few ingredients."},
- {"name": "Food-porn scroller", "weight": 0.30, "hook_sens": 0.95, "patience": 0.2, "share": 0.15, "follow": 0.03, "bio": "Stays only if the first shot looks delicious."},
- {"name": "Home chef", "weight": 0.15, "hook_sens": 0.5, "patience": 0.7, "share": 0.10, "follow": 0.25, "bio": "Cares about technique and why things work."},
- {"name": "Meal-prep saver", "weight": 0.10, "hook_sens": 0.6, "patience": 0.6, "share": 0.25, "follow": 0.15, "bio": "Saves recipes for later; values macros and batch cooking."},
- {"name": "Tag-a-friend sharer", "weight": 0.15, "hook_sens": 0.7, "patience": 0.5, "share": 0.55, "follow": 0.08, "bio": "Sends recipes with 'we should make this'."}
-]}
+{
+ "curiosity": [
+  "recipe",
+  "easy",
+  "crispy",
+  "juicy",
+  "minutes",
+  "budget",
+  "leftover",
+  "mistake",
+  "secret"
+ ],
+ "personas": [
+  {
+   "name": "Weeknight cook",
+   "weight": 0.3,
+   "hook_sens": 0.8,
+   "patience": 0.5,
+   "share": 0.2,
+   "follow": 0.12,
+   "bio": "Wants a fast dinner idea with few ingredients."
+  },
+  {
+   "name": "Food-porn scroller",
+   "weight": 0.3,
+   "hook_sens": 0.95,
+   "patience": 0.2,
+   "share": 0.15,
+   "follow": 0.03,
+   "bio": "Stays only if the first shot looks delicious."
+  },
+  {
+   "name": "Home chef",
+   "weight": 0.15,
+   "hook_sens": 0.5,
+   "patience": 0.7,
+   "share": 0.1,
+   "follow": 0.25,
+   "bio": "Cares about technique and why things work."
+  },
+  {
+   "name": "Meal-prep saver",
+   "weight": 0.1,
+   "hook_sens": 0.6,
+   "patience": 0.6,
+   "share": 0.25,
+   "follow": 0.15,
+   "bio": "Saves recipes for later; values macros and batch cooking."
+  },
+  {
+   "name": "Tag-a-friend sharer",
+   "weight": 0.15,
+   "hook_sens": 0.7,
+   "patience": 0.5,
+   "share": 0.55,
+   "follow": 0.08,
+   "bio": "Sends recipes with 'we should make this'."
+  }
+ ],
+ "subreddits": [
+  "Cooking",
+  "MealPrepSunday"
+ ]
+}

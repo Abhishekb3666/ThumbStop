@@ -45,3 +45,9 @@ python dev_server.py        # local preview at http://localhost:8000
 vercel                      # deploy: Vercel picks up public/ and api/analyze.py
 ```
 The public web version runs the offline scorer only. Set `THUMBSTOP_WEB_LLM=1` plus `ANTHROPIC_API_KEY` on the server to enable Claude mode (this spends your API credits on every visitor request).
+
+## Trends -> hook ideas
+```bash
+thumbstop trends --niche fitness --ideas 5
+```
+Pulls what's trending (Google Trends, your niche's subreddits via Reddit RSS, Hacker News for tech) and ranks hook ideas with the same scorer you use on your own scripts. Add `"subreddits": [...]` to a pack to choose the sources. Reddit rate-limits anonymous clients; if a source fails you get a warning and the rest still work. Trending audio isn't covered: Instagram has no public API for it.

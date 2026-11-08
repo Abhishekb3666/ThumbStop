@@ -1,7 +1,66 @@
-{"curiosity": ["ai", "app", "tool", "free", "automate", "code", "hack", "setup", "workflow", "prompt"], "personas": [
- {"name": "Tool collector", "weight": 0.30, "hook_sens": 0.9, "patience": 0.3, "share": 0.20, "follow": 0.10, "bio": "Loves discovering new apps; swipes from tools they already know."},
- {"name": "Working developer", "weight": 0.20, "hook_sens": 0.5, "patience": 0.6, "share": 0.10, "follow": 0.20, "bio": "Wants depth and correctness, hates hype."},
- {"name": "Career switcher", "weight": 0.20, "hook_sens": 0.7, "patience": 0.6, "share": 0.15, "follow": 0.15, "bio": "Learning to code or use AI for a better job."},
- {"name": "AI skeptic", "weight": 0.10, "hook_sens": 0.6, "patience": 0.4, "share": 0.05, "follow": 0.03, "bio": "Tired of AI demos that don't work."},
- {"name": "Slack-channel sharer", "weight": 0.20, "hook_sens": 0.7, "patience": 0.5, "share": 0.50, "follow": 0.08, "bio": "Posts useful finds to their team."}
-]}
+{
+ "curiosity": [
+  "ai",
+  "app",
+  "tool",
+  "free",
+  "automate",
+  "code",
+  "hack",
+  "setup",
+  "workflow",
+  "prompt"
+ ],
+ "personas": [
+  {
+   "name": "Tool collector",
+   "weight": 0.3,
+   "hook_sens": 0.9,
+   "patience": 0.3,
+   "share": 0.2,
+   "follow": 0.1,
+   "bio": "Loves discovering new apps; swipes from tools they already know."
+  },
+  {
+   "name": "Working developer",
+   "weight": 0.2,
+   "hook_sens": 0.5,
+   "patience": 0.6,
+   "share": 0.1,
+   "follow": 0.2,
+   "bio": "Wants depth and correctness, hates hype."
+  },
+  {
+   "name": "Career switcher",
+   "weight": 0.2,
+   "hook_sens": 0.7,
+   "patience": 0.6,
+   "share": 0.15,
+   "follow": 0.15,
+   "bio": "Learning to code or use AI for a better job."
+  },
+  {
+   "name": "AI skeptic",
+   "weight": 0.1,
+   "hook_sens": 0.6,
+   "patience": 0.4,
+   "share": 0.05,
+   "follow": 0.03,
+   "bio": "Tired of AI demos that don't work."
+  },
+  {
+   "name": "Slack-channel sharer",
+   "weight": 0.2,
+   "hook_sens": 0.7,
+   "patience": 0.5,
+   "share": 0.5,
+   "follow": 0.08,
+   "bio": "Posts useful finds to their team."
+  }
+ ],
+ "subreddits": [
+  "technology",
+  "ChatGPT",
+  "programming"
+ ]
+}

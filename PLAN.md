@@ -11,7 +11,7 @@
 | 3 | Video input: Whisper transcript, real first-3s hook, duration, dead air, pace (scene-cut and visual checks still todo) | done |
 | 4 | Niche persona packs: JSON files (built-in fitness, finance, food, tech; yours in ~/.thumbstop/packs) with niche hook words | done |
 | 5 | Web UI: static page + Python function on Vercel (`public/`, `api/analyze.py`), local preview via `python dev_server.py` | done |
-| 6 | Trend ingestion: pull trending audio/topics to seed ideas | |
+| 6 | Trend ingestion: `thumbstop trends` (Google Trends, Reddit RSS per-niche subreddits, Hacker News for tech) ranked by the hook scorer; no trending-audio source (Instagram has no public API) | done |
 
 ## Own Instagram page (the dogfooding channel)
 Account name suggestion: ``@thumbstop` or `@thumbstop.ai`. Content: daily "I scored viral hooks, here's why" Reels, before/after hook rewrites, weekly leaderboard.

@@ -1,10 +1,10 @@
 # Contributing to ThumbStop
 
-Thanks for helping! Good places to start: issues labelled [`good first issue`](https://github.com/Abhishekb3666/thumbstop/labels/good%20first%20issue) and [`help wanted`](https://github.com/Abhishekb3666/thumbstop/labels/help%20wanted).
+Thanks for helping! Good places to start: issues labelled [`good first issue`](https://github.com/Abhishekb3666/ThumbStop/labels/good%20first%20issue) and [`help wanted`](https://github.com/Abhishekb3666/ThumbStop/labels/help%20wanted).
 
 ## Setup
 ```bash
-git clone https://github.com/Abhishekb3666/thumbstop && cd thumbstop
+git clone https://github.com/Abhishekb3666/ThumbStop && cd ThumbStop
 pip install -e ".[dev]"
 python -m pytest -q                 # ~15s, must pass
 python scripts/validate.py          # model sanity report, must end with ALL CHECKS PASSED

@@ -63,3 +63,8 @@ The public web version runs the offline scorer only. Set `THUMBSTOP_WEB_LLM=1` p
 thumbstop trends --niche fitness --ideas 5
 ```
 Pulls what's trending (Google Trends, your niche's subreddits via Reddit RSS, Hacker News for tech) and ranks hook ideas with the same scorer you use on your own scripts. Add `"subreddits": [...]` to a pack to choose the sources. Reddit rate-limits anonymous clients; if a source fails you get a warning and the rest still work. Trending audio isn't covered: Instagram has no public API for it.
+
+## Validation
+`python scripts/validate.py` prints a model report (stability across crowds, direction of each effect, ordering against a human-labelled ladder, segment sanity, score distribution, calibration recovery, speed) and `pytest` runs 38 tests including a 250-case fuzz run.
+What this shows: the simulation is stable (score noise is about +/-3 points, so treat gaps under 5 as noise), each lever moves the score the right way, and it ranks posts like a human would on a small labelled set.
+What it can't show: that scores match real platform performance. That needs your real results via `thumbstop calibrate`.

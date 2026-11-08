@@ -4,7 +4,7 @@ Will your Reel/Short/TikTok get reach? ThumbStop simulates a small audience of v
 
 ```bash
 pip install -e .            # offline heuristic mode, zero dependencies
-pip install -e ".[llm]"     # + Claude-powered persona simulation (set ANTHROPIC_API_KEY)
+pip install -e ".[llm]"     # + LLM persona simulation (set ANTHROPIC_API_KEY)
 
 thumbstop analyze script.txt --niche fitness
 thumbstop plan --niche fitness --days 7
@@ -20,7 +20,7 @@ Fix these:
   - Under 8s: too short to deliver value or earn a follow.
 ```
 
-See [PLAN.md](PLAN.md) for the roadmap. Contributions welcome: persona packs, better heuristics, calibration data. MIT licensed.
+See [ROADMAP.md](ROADMAP.md) for the roadmap. Contributions welcome: persona packs, better heuristics, calibration data. MIT licensed.
 
 ## Calibration (learn from your real results)
 ```bash
@@ -44,7 +44,7 @@ Make your own by dropping `~/.thumbstop/packs/<niche>.json` (see `src/thumbstop/
 python dev_server.py        # local preview at http://localhost:8000
 vercel                      # deploy: Vercel picks up public/ and api/analyze.py
 ```
-The public web version runs the offline scorer only. Set `THUMBSTOP_WEB_LLM=1` plus `ANTHROPIC_API_KEY` on the server to enable Claude mode (this spends your API credits on every visitor request).
+The public web version runs the offline scorer only. Set `THUMBSTOP_WEB_LLM=1` plus `ANTHROPIC_API_KEY` on the server to enable LLM mode (this spends your API credits on every visitor request).
 
 ## Trends -> hook ideas
 ```bash

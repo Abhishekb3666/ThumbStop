@@ -7,7 +7,7 @@ import time
 import urllib.parse
 import urllib.request
 
-API = "https://graph.facebook.com/v21.0"
+API = os.environ.get("IG_API_BASE", "https://graph.facebook.com/v21.0")  # graph.instagram.com for Instagram-Login tokens
 
 
 def _call(path, params, method="POST"):

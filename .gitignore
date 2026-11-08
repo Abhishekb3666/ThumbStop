@@ -6,3 +6,6 @@ __pycache__/
 # local AI-assistant files
 CLAUDE.md
 .claude/
+
+.vercel
+.env*
